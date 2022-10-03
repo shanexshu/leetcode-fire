@@ -1,14 +1,33 @@
 class Solution:
-    def numRollsToTarget(self, d: int, f: int, target: int) -> int:
-        memo = {}
-        def dp(d, target):
-            if d == 0:
-                return 0 if target > 0 else 1
-            if (d, target) in memo:
-                return memo[(d, target)]
-            to_return = 0
-            for k in range(max(0, target-f), target):
-                to_return += dp(d-1, k)
-            memo[(d, target)] = to_return
-            return to_return
-        return dp(d, target) % (10**9 + 7)
+    def numRollsToTarget(self, n: int, k: int, target: int) -> int:
+        MAX = 10**9 + 7
+        
+        dp = [[0] * (target+1) for _ in range(n+1)]
+        
+        dp[0][0] = 1
+        
+        for i in range(1, len(dp)):
+            for j in range(1, len(dp[0])):
+                for f in range(1,k+1):
+                    if 0<=j-f<len(dp[0]):
+                        dp[i][j] += dp[i-1][j-f]
+        
+        return dp[-1][-1] % MAX
+'''
+dp
+
+dp[i][j] = number of ways to get j from i dice
+
+number of dice / target
+ 01234567
+010000000
+101111110   
+200123456
+30001
+40
+50
+60
+
+dp[i+1][j+1:j+k] = 
+
+'''
